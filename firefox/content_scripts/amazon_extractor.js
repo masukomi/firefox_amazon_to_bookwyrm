@@ -38,24 +38,9 @@
    * @returns {Object} Dictionary with keys: month (number), day (number), year (number)
    */
   function stringDateToArray(stringDate) {
-    const months = {
-      'january': 1, 'february': 2, 'march': 3, 'april': 4,
-      'may': 5, 'june': 6, 'july': 7, 'august': 8,
-      'september': 9, 'october': 10, 'november': 11, 'december': 12
-    };
+    const date = new Date(stringDate)
 
-    // Parse the date string (e.g., "March 7, 2023")
-    const match = stringDate.match(/(\w+)\s+(\d+),?\s+(\d+)/);
-    if (!match) {
-      return { month: null, day: null, year: null };
-    }
-
-    const monthName = match[1].toLowerCase();
-    const day = parseInt(match[2], 10);
-    const year = parseInt(match[3], 10);
-    const month = months[monthName] || null;
-
-    return { month, day, year };
+    return { date.getMonth() + 1, date.getDate(), date.getFullYear() };
   }
 
   /**
