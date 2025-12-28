@@ -55,6 +55,12 @@ async function injectAndExtract(tabId) {
 
     // Now send the message to trigger extraction
     const response = await browser.tabs.sendMessage(tabId, { action: 'triggerExtraction' });
+
+    // Debug: log extracted data
+    if (response && response.extractedData) {
+      console.log('extractedData:', response.extractedData);
+    }
+
     return response;
   } catch (err) {
     console.error('Failed to inject or communicate with content script:', err);
