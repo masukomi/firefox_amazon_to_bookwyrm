@@ -88,7 +88,7 @@ async function saveSettings() {
 /**
  * Check if current tab is an Amazon page
  */
-async function isAmazonPage() {
+async function isExtractableSite() {
   try {
     const tabs = await browser.tabs.query({ active: true, currentWindow: true });
     if (tabs.length === 0) {
@@ -115,8 +115,8 @@ async function extractBookData() {
   }
 
   // Check if we're on an Amazon page
-  const onAmazon = await isAmazonPage();
-  if (!onAmazon) {
+  const onExtractableSite = await isExtractableSite();
+  if (!onExtractableSite) {
     showStatus('Please navigate to an Amazon book page first', 'warning');
     return;
   }

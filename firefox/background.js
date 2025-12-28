@@ -6,7 +6,7 @@
 /**
  * Check if a URL is an Amazon book page
  */
-function isAmazonPage(url) {
+function isExtractableSite(url) {
   if (!url) return false;
   return url.includes('amazon.com') || url.includes('amazon.co.uk');
 }
@@ -95,7 +95,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       const tab = tabs[0];
 
-      if (!isAmazonPage(tab.url)) {
+      if (!isExtractableSite(tab.url)) {
         sendResponse({ success: false, error: 'Not on an Amazon page' });
         return;
       }
