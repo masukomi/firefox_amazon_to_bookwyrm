@@ -146,9 +146,9 @@
       extractionTimestamp: Date.now()
     });
 
-    // Open BookWyrm create-book page
+    // Redirect to BookWyrm create-book page
     const createBookUrl = settings.bookwyrmUrl + '/create-book';
-    window.open(createBookUrl, '_blank');
+    window.location.href = createBookUrl;
 
     return { success: true };
   }
