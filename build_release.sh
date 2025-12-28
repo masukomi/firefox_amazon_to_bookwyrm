@@ -10,7 +10,7 @@ set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Define the output filename (placed in parent directory)
-OUTPUT_FILE="$SCRIPT_DIR/../amazon_to_bookwyrm.zip"
+OUTPUT_FILE="$SCRIPT_DIR/amazon_to_bookwyrm.zip"
 
 # Remove existing zip if present
 if [ -f "$OUTPUT_FILE" ]; then
