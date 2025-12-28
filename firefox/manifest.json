@@ -8,8 +8,7 @@
       "id": "amazon-to-bookwyrm@masukomi.org",
       "strict_min_version": "109.0",
       "data_collection_permissions": {
-        "browsingActivity": true,
-        "websiteContent": true
+        "required": ["browsingActivity", "websiteContent"]
       }
     }
   },
