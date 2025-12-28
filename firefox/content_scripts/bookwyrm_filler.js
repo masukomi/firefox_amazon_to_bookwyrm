@@ -215,7 +215,7 @@
     if (storage.extractedBookData) {
       alert(
         'You need to be logged in to your BookWyrm instance to add a book.\n\n' +
-          'Please log in, then go back to Amazon and try again.'
+          'Please log in, & make sure this book doesn\'t already exist befor trying again.'
       );
       // Clear the stored data since they'll need to extract again
       await browser.storage.local.remove(['extractedBookData', 'extractionTimestamp']);
