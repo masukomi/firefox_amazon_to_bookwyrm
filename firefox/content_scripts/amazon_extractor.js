@@ -37,7 +37,7 @@
    * @param {string} stringDate - The date string to parse
    * @returns {Object} Dictionary with keys: month (number), day (number), year (number)
    */
-  function stringDateToArray(stringDate) {
+  function stringDateToDictionary(stringDate) {
     const date = new Date(stringDate)
 
     return { date.getMonth() + 1, date.getDate(), date.getFullYear() };
@@ -70,8 +70,8 @@
     try {
       // Create a function from the code string and execute it
       // Pass helper functions as parameters so they're available in the extractor code
-      const fn = new Function('productDetails', 'productDetail', 'stringDateToArray', 'return ' + code);
-      const result = fn(productDetails, productDetail, stringDateToArray);
+      const fn = new Function('productDetails', 'productDetail', 'stringDateToDictionary', 'return ' + code);
+      const result = fn(productDetails, productDetail, stringDateToDictionary);
       return result !== undefined && result !== null && result !== '' ? result : null;
     } catch (e) {
       console.warn('Extractor failed:', e);
