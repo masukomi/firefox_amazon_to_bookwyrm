@@ -204,6 +204,24 @@
     return window.location.pathname.includes('/create-book');
   }
 
+  // Check if we're on a login page (redirected because not logged in)
+  function isLoginPage() {
+    return window.location.pathname.includes('/login');
+  }
+
+  // Handle the case where user was redirected to login
+  async function handleLoginRedirect() {
+    const storage = await browser.storage.local.get(['extractedBookData']);
+    if (storage.extractedBookData) {
+      alert(
+        'You need to be logged in to your BookWyrm instance to add a book.\n\n' +
+          'Please log in, then go back to Amazon and try again.'
+      );
+      // Clear the stored data since they'll need to extract again
+      await browser.storage.local.remove(['extractedBookData', 'extractionTimestamp']);
+    }
+  }
+
   // Run when page loads
   if (isCreateBookPage()) {
     // Wait for the form to be ready
@@ -213,6 +231,13 @@
       });
     } else {
       setTimeout(fillForm, 500);
+    }
+  } else if (isLoginPage()) {
+    // User was redirected to login - let them know
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', handleLoginRedirect);
+    } else {
+      handleLoginRedirect();
     }
   }
 })();

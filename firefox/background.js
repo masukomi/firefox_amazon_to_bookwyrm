@@ -25,6 +25,19 @@ async function isBookWyrmCreatePage(url) {
 }
 
 /**
+ * Check if a URL is a BookWyrm login page
+ */
+async function isBookWyrmLoginPage(url) {
+  if (!url) return false;
+
+  const storage = await browser.storage.local.get('bookwyrmUrl');
+  if (!storage.bookwyrmUrl) return false;
+
+  // Check if the URL starts with the BookWyrm instance URL and contains /login
+  return url.startsWith(storage.bookwyrmUrl) && url.includes('/login');
+}
+
+/**
  * Inject the BookWyrm filler script into a tab
  */
 async function injectBookWyrmFiller(tabId) {
@@ -103,9 +116,11 @@ browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   // Only act when the page has finished loading
   if (changeInfo.status !== 'complete') return;
 
-  // Check if this is a BookWyrm create-book page
+  // Check if this is a BookWyrm create-book page or login page
   const isCreatePage = await isBookWyrmCreatePage(tab.url);
-  if (isCreatePage) {
+  const isLoginPage = await isBookWyrmLoginPage(tab.url);
+
+  if (isCreatePage || isLoginPage) {
     // Small delay to ensure the page is fully rendered
     setTimeout(() => injectBookWyrmFiller(tabId), 300);
   }
