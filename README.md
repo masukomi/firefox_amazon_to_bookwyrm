@@ -1,7 +1,7 @@
 # Amazon to BookWyrm - Firefox Extension
 
 <div>
-  <img style="max-width: 10em;" aria-hidden="true" src="https://raw.githubusercontent.com/masukomi/firefox_amazon_to_bookwyrm/main/firefox/icons/icon.svg">
+  <img style="max-width: 10em; max-height: 10em;" aria-hidden="true" src="https://raw.githubusercontent.com/masukomi/firefox_amazon_to_bookwyrm/main/firefox/icons/icon.svg">
 </div>
 
 A Firefox browser extension that extracts book data from Amazon.com and Amazon.co.uk, then automatically populates the "Add Book" form on your BookWyrm instance.
@@ -24,13 +24,9 @@ This extension lets you:
 
 ## Installation
 
-### From Source (Temporary Installation)
+Go to [addons.mozilla.org](https://addons.mozilla.org/amazon-to-bookwyrm) and click install. 
 
-1. Clone this repository
-2. Open Firefox and navigate to `about:debugging`
-3. Click "This Firefox"
-4. Click "Load Temporary Add-on"
-5. Select the `firefox/manifest.json` file
+You'll want to pin the extension to your toolbar so that its button is available for clicking.
 
 ## Usage
 
@@ -76,6 +72,13 @@ If you notice that certain fields are no longer being extracted correctly, pleas
 **Extension not working**: Try reloading the extension from `about:debugging` and refreshing the Amazon page.
 
 ## For Developers
+### Installing From Source (Temporary Installation)
+
+1. Clone this repository
+2. Open Firefox and navigate to `about:debugging`
+3. Click "This Firefox"
+4. Click "Load Temporary Add-on"
+5. Select the `firefox/manifest.json` file
 
 ### How Data Extraction Works
 
