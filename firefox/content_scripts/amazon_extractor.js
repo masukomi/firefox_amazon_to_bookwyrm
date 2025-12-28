@@ -3,7 +3,7 @@
  * Extracts book data from Amazon product pages and sends it to BookWyrm
  */
 
-(function() {
+(function () {
   'use strict';
 
   // Critical fields that must be present
@@ -16,9 +16,9 @@
   function productDetails() {
     const detailList = document.querySelector('#detailBullets_feature_div > ul');
     if (!detailList) return [];
-    return Array.from(detailList.children).map((x) =>
-      x.children[0].textContent.replace(/^\s+|\s+$|\s{2,}/g, "").split(":")
-    );
+    //save for later: .map((x) => x.replace(/^\W+/, ''));
+    return Array.from(detailList.children).map((x) => x.children[0].textContent.replace(/^\s+|\s+$|\s{2,}/g, "").split(":").map((x) => x.replace(/^\W+/, '')));
+
   }
 
   /**
@@ -38,7 +38,23 @@
    * @returns {Object} Dictionary with keys: month (number), day (number), year (number)
    */
   function stringDateToDictionary(stringDate) {
-    const date = new Date(stringDate);
+    if (!stringDate) {
+      return { month: null, day: null, year: null };
+    }
+
+    // Trim whitespace
+    const trimmed = stringDate.trim().replace(/^\W+/, '');
+
+    // Debug: log what we're trying to parse
+    console.log('stringDateToDictionary input:', trimmed);
+
+    const date = new Date(trimmed);
+
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+      console.log('stringDateToDictionary: Invalid date');
+      return { month: null, day: null, year: null };
+    }
 
     return { month: date.getMonth() + 1, day: date.getDate(), year: date.getFullYear() };
   }
@@ -150,7 +166,7 @@
     const createBookUrl = settings.bookwyrmUrl + '/create-book';
     window.location.href = createBookUrl;
 
-    return { success: true };
+    return { success: true, extractedData: result.data };
   }
 
   // Listen for extraction messages from the background script
