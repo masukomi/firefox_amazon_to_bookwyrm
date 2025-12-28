@@ -38,9 +38,9 @@
    * @returns {Object} Dictionary with keys: month (number), day (number), year (number)
    */
   function stringDateToDictionary(stringDate) {
-    const date = new Date(stringDate)
+    const date = new Date(stringDate);
 
-    return { date.getMonth() + 1, date.getDate(), date.getFullYear() };
+    return { month: date.getMonth() + 1, day: date.getDate(), year: date.getFullYear() };
   }
 
   /**

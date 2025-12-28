@@ -40,12 +40,35 @@ async function injectBookWyrmFiller(tabId) {
 }
 
 /**
+ * Inject the Amazon extractor script and trigger extraction
+ */
+async function injectAndExtract(tabId) {
+  try {
+    // Inject the content script programmatically to ensure it's loaded
+    await browser.tabs.executeScript(tabId, {
+      file: 'content_scripts/amazon_extractor.js',
+      runAt: 'document_idle'
+    });
+
+    // Small delay to ensure the script is fully initialized
+    await new Promise(resolve => setTimeout(resolve, 100));
+
+    // Now send the message to trigger extraction
+    const response = await browser.tabs.sendMessage(tabId, { action: 'triggerExtraction' });
+    return response;
+  } catch (err) {
+    console.error('Failed to inject or communicate with content script:', err);
+    return { success: false, error: 'Failed to extract data. Please try again.' };
+  }
+}
+
+/**
  * Handle messages from popup and content scripts
  */
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'extractBookData') {
     // Get the active tab and trigger extraction
-    browser.tabs.query({ active: true, currentWindow: true }).then(tabs => {
+    browser.tabs.query({ active: true, currentWindow: true }).then(async tabs => {
       if (tabs.length === 0) {
         sendResponse({ success: false, error: 'No active tab found' });
         return;
@@ -58,13 +81,9 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
         return;
       }
 
-      // Send message to the content script to trigger extraction
-      browser.tabs.sendMessage(tab.id, { action: 'triggerExtraction' }).then(response => {
-        sendResponse(response);
-      }).catch(err => {
-        console.error('Failed to communicate with content script:', err);
-        sendResponse({ success: false, error: 'Failed to extract data. Please refresh the page and try again.' });
-      });
+      // Inject the script and trigger extraction
+      const response = await injectAndExtract(tab.id);
+      sendResponse(response);
     });
 
     return true; // Indicates async response
