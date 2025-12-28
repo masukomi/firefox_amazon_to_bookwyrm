@@ -1,1 +1,4 @@
 *.fold
+eslint.config.js
+instructions*
+*.zip
