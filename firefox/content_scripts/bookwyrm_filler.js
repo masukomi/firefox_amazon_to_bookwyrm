@@ -75,15 +75,19 @@
    * Fill a select/dropdown field
    */
   function fillSelectField(elementId, value) {
-    if (!value) return;
-
+    if (value === null || value === undefined) {
+      return;
+    }
     const select = document.getElementById(elementId);
     if (!select) return;
 
+    // Convert value to string for comparison with option values
+    const stringValue = String(value);
+
     // Find the option with matching value
     for (const option of select.options) {
-      if (option.value === value) {
-        select.value = value;
+      if (option.value === stringValue) {
+        select.value = stringValue;
         select.dispatchEvent(new Event('change', { bubbles: true }));
         return;
       }
