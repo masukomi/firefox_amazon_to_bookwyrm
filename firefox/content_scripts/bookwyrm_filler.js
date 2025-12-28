@@ -159,19 +159,30 @@
     // Physical format (select)
     fillSelectField('id_physical_format', data.physical_format);
 
-    // Date fields
-    const dateFields = [
+    // Date fields - month and day are <select> elements
+    const dateSelectFields = [
       ['id_published_date_month', 'published_date_month'],
       ['id_published_date_day', 'published_date_day'],
-      ['id_published_date_year', 'published_date_year'],
       ['id_first_published_date_month', 'first_published_date_month'],
-      ['id_first_published_date_day', 'first_published_date_day'],
+      ['id_first_published_date_day', 'first_published_date_day']
+    ];
+
+    for (const [elementId, dataKey] of dateSelectFields) {
+      if (data[dataKey]) {
+        fillSelectField(elementId, data[dataKey]);
+      }
+    }
+
+    // Date fields - year is <input type="number">
+    const dateYearFields = [
+      ['id_published_date_year', 'published_date_year'],
       ['id_first_published_date_year', 'first_published_date_year']
     ];
 
-    for (const [elementId, dataKey] of dateFields) {
-      if (data[dataKey]) {
-        fillSelectField(elementId, data[dataKey]);
+    for (const [elementId, dataKey] of dateYearFields) {
+      const element = document.getElementById(elementId);
+      if (element && data[dataKey]) {
+        setFieldValue(element, data[dataKey]);
       }
     }
 
