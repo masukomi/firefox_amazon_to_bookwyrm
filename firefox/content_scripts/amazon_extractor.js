@@ -10,6 +10,29 @@
   const CRITICAL_FIELDS = ['title', 'add_author'];
 
   /**
+   * Get all product details as an array of [key, value] pairs
+   * @returns {Array} Array of [key, value] pairs from the product detail bullets
+   */
+  function productDetails() {
+    const detailList = document.querySelector('#detailBullets_feature_div > ul');
+    if (!detailList) return [];
+    return Array.from(detailList.children).map((x) =>
+      x.children[0].textContent.replace(/^\s+|\s+$|\s{2,}/g, "").split(":")
+    );
+  }
+
+  /**
+   * Get a specific product detail by name
+   * @param {string|RegExp} itemName - The name (or regex pattern) of the detail to find
+   * @returns {string|undefined} The value of the matching detail, or undefined if not found
+   */
+  function productDetail(itemName) {
+    const details = productDetails();
+    const found = details.find(item => item[0].match(itemName));
+    return found ? found[1] : undefined;
+  }
+
+  /**
    * Load field extractors from JSON file
    */
   async function loadExtractors() {
@@ -35,8 +58,9 @@
 
     try {
       // Create a function from the code string and execute it
-      const fn = new Function('return ' + code);
-      const result = fn();
+      // Pass helper functions as parameters so they're available in the extractor code
+      const fn = new Function('productDetails', 'productDetail', 'return ' + code);
+      const result = fn(productDetails, productDetail);
       return result !== undefined && result !== null && result !== '' ? result : null;
     } catch (e) {
       console.warn('Extractor failed:', e);
