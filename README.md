@@ -12,6 +12,10 @@ A Firefox browser extension that extracts book data from Amazon.com and Amazon.c
 
 ## The Solution
 
+<div >
+  <img style="max-height: 30em;" alt="screenshot of the extension in use on amazon" title="screenshot of extension in use on amazon" src="https://raw.githubusercontent.com/masukomi/firefox_amazon_to_bookwyrm/main/screenshots/amazon_screenshot.png">
+</div>
+
 This extension lets you:
 
 1. Visit any book page on Amazon.com or Amazon.co.uk
