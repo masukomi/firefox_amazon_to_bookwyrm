@@ -3,6 +3,16 @@
   "name": "Amazon to BookWyrm",
   "version": "1.0.0",
   "description": "Extract book data from Amazon and populate BookWyrm's create-book form",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "amazon-to-bookwyrm@masukomi.org",
+      "strict_min_version": "109.0",
+      "data_collection_permissions": {
+        "browsingActivity": true,
+        "websiteContent": true
+      }
+    }
+  },
   "icons": {
     "48": "icons/icon.svg",
     "96": "icons/icon.svg"
