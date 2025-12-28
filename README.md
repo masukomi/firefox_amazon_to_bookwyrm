@@ -1,7 +1,7 @@
 # Amazon to BookWyrm - Firefox Extension
 
-<div style="max-width: 10em;">
-  <img aria-hidden="true" src="https://raw.githubusercontent.com/masukomi/firefox_amazon_to_bookwyrm/main/firefox/icons/icon.svg">
+<div>
+  <img style="max-width: 10em;" aria-hidden="true" src="https://raw.githubusercontent.com/masukomi/firefox_amazon_to_bookwyrm/main/firefox/icons/icon.svg">
 </div>
 
 A Firefox browser extension that extracts book data from Amazon.com and Amazon.co.uk, then automatically populates the "Add Book" form on your BookWyrm instance.
@@ -50,6 +50,14 @@ The extension only activates on:
 - Your configured BookWyrm instance URL (to fill the form)
 
 You can review the source code to verify this behavior.
+
+## Privacy
+The plugin stores two pieces of information _in your browser_: 
+
+1. the domain name of your BookWyrm instance
+2. information from an Amazon product listing, that it uses to populate a form on your BookWyrm account.
+
+This information isn't transmitted to anyone else. We don't see what books you're looking at or any account information from any site.
 
 ## Important: Screen Scraping Limitations
 
