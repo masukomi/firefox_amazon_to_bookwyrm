@@ -33,6 +33,32 @@
   }
 
   /**
+   * Convert a date string like "March 7, 2023" to a dictionary with month, day, year
+   * @param {string} stringDate - The date string to parse
+   * @returns {Object} Dictionary with keys: month (number), day (number), year (number)
+   */
+  function stringDateToArray(stringDate) {
+    const months = {
+      'january': 1, 'february': 2, 'march': 3, 'april': 4,
+      'may': 5, 'june': 6, 'july': 7, 'august': 8,
+      'september': 9, 'october': 10, 'november': 11, 'december': 12
+    };
+
+    // Parse the date string (e.g., "March 7, 2023")
+    const match = stringDate.match(/(\w+)\s+(\d+),?\s+(\d+)/);
+    if (!match) {
+      return { month: null, day: null, year: null };
+    }
+
+    const monthName = match[1].toLowerCase();
+    const day = parseInt(match[2], 10);
+    const year = parseInt(match[3], 10);
+    const month = months[monthName] || null;
+
+    return { month, day, year };
+  }
+
+  /**
    * Load field extractors from JSON file
    */
   async function loadExtractors() {
@@ -59,8 +85,8 @@
     try {
       // Create a function from the code string and execute it
       // Pass helper functions as parameters so they're available in the extractor code
-      const fn = new Function('productDetails', 'productDetail', 'return ' + code);
-      const result = fn(productDetails, productDetail);
+      const fn = new Function('productDetails', 'productDetail', 'stringDateToArray', 'return ' + code);
+      const result = fn(productDetails, productDetail, stringDateToArray);
       return result !== undefined && result !== null && result !== '' ? result : null;
     } catch (e) {
       console.warn('Extractor failed:', e);
