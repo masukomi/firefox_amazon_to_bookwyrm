@@ -1,6 +1,6 @@
 {
   "title": "document.getElementById('productTitle').textContent.replace(/^\\s+|\\s+$/g, '')",
-  "description": "document.querySelector('#bookDescription_feature_div > div > div > span').innerHTML.replace(/<br>/g, \"\\n\")",
+  "description": "document.querySelector('#bookDescription_feature_div > div > div ').innerHTML.replace(/<br>|<\/?span.*?>/g, '\n').replace(/\n{3,}/, '\n\n').trim()",
   "series": "document.querySelector('#seriesBulletWidget_feature_div > a:nth-child(1)').textContent.replace(/.*Part of:\\s/i, '').replace(/ \\(\\d+ books\\)\\s+/, '')",
   "languages": "productDetail(/Language/i)",
   "subjects": "productDetail(/Best Sellers Rank/i).split('#').filter(x => ! x.match(/^$|Kindle Store/)).map((x) => x.replace(/(\\d+,?)+ in /, '').replace(/\\s+\\(.*?\\)$/, ''))",
