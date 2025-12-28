@@ -1,0 +1,38 @@
+{
+  "manifest_version": 2,
+  "name": "Amazon to BookWyrm",
+  "version": "1.0.0",
+  "description": "Extract book data from Amazon and populate BookWyrm's create-book form",
+  "icons": {
+    "48": "icons/icon.svg",
+    "96": "icons/icon.svg"
+  },
+  "permissions": [
+    "storage",
+    "activeTab",
+    "tabs",
+    "*://*.amazon.com/*",
+    "*://*.amazon.co.uk/*",
+    "<all_urls>"
+  ],
+  "browser_action": {
+    "default_icon": "icons/icon.svg",
+    "default_title": "Amazon to BookWyrm",
+    "default_popup": "popup/popup.html"
+  },
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
+  "content_scripts": [
+    {
+      "matches": ["*://*.amazon.com/*", "*://*.amazon.co.uk/*"],
+      "js": ["content_scripts/amazon_extractor.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    "shared/field_extractors.json",
+    "content_scripts/bookwyrm_filler.js"
+  ]
+}

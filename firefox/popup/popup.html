@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Amazon to BookWyrm Settings</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>BookWyrm Settings</h1>
+
+    <div class="form-group">
+      <label for="bookwyrm-url">BookWyrm Instance URL</label>
+      <input
+        type="url"
+        id="bookwyrm-url"
+        placeholder="https://bookwyrm.social"
+        required
+      >
+      <p class="help-text">e.g., https://bookwyrm.social</p>
+    </div>
+
+    <div class="button-group">
+      <button id="save-btn" type="button">Save</button>
+      <button id="extract-btn" type="button" class="primary">Extract Book Data</button>
+    </div>
+
+    <div id="status" class="status"></div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
