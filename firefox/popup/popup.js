@@ -4,7 +4,6 @@
  */
 
 const bookwyrmUrlInput = document.getElementById('bookwyrm-url');
-const saveBtn = document.getElementById('save-btn');
 const extractBtn = document.getElementById('extract-btn');
 const statusDiv = document.getElementById('status');
 
@@ -65,21 +64,19 @@ async function loadSettings() {
 
 /**
  * Save settings to storage
+ * Returns true if saved successfully, false otherwise
  */
 async function saveSettings() {
-  clearStatus();
-
   const url = normalizeUrl(bookwyrmUrlInput.value);
 
   if (!url) {
-    showStatus('Please enter a valid URL', 'error');
+    showStatus('Please enter a valid BookWyrm URL', 'error');
     return false;
   }
 
   try {
     await browser.storage.local.set({ bookwyrmUrl: url });
     bookwyrmUrlInput.value = url;
-    showStatus('Settings saved!', 'success');
     return true;
   } catch (e) {
     console.error('Failed to save settings:', e);
@@ -111,10 +108,9 @@ async function isAmazonPage() {
 async function extractBookData() {
   clearStatus();
 
-  // Check if BookWyrm URL is configured
-  const result = await browser.storage.local.get('bookwyrmUrl');
-  if (!result.bookwyrmUrl) {
-    showStatus('Please configure your BookWyrm instance URL first', 'warning');
+  // Save the URL first (in case user entered a new one)
+  const saved = await saveSettings();
+  if (!saved) {
     return;
   }
 
@@ -142,7 +138,6 @@ async function extractBookData() {
 }
 
 // Event listeners
-saveBtn.addEventListener('click', saveSettings);
 extractBtn.addEventListener('click', extractBookData);
 
 // Load settings on popup open
