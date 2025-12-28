@@ -105,7 +105,6 @@
     ]);
 
     if (!storage.extractedBookData) {
-      console.log('No extracted book data found');
       return;
     }
 
@@ -113,14 +112,12 @@
     if (storage.extractionTimestamp) {
       const age = Date.now() - storage.extractionTimestamp;
       if (age > MAX_DATA_AGE) {
-        console.log('Extracted data is too old, ignoring');
         await browser.storage.local.remove(['extractedBookData', 'extractionTimestamp']);
         return;
       }
     }
 
     const data = storage.extractedBookData;
-    console.log('Filling form with extracted data:', data);
 
     // Simple text fields
     const textFields = [
@@ -200,7 +197,6 @@
 
     // Clear stored data after filling
     await browser.storage.local.remove(['extractedBookData', 'extractionTimestamp']);
-    console.log('Form filled successfully');
   }
 
   // Check if we're on a create-book page

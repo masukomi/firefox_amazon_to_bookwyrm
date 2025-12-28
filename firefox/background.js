@@ -33,7 +33,7 @@ async function injectBookWyrmFiller(tabId) {
       file: 'content_scripts/bookwyrm_filler.js',
       runAt: 'document_idle'
     });
-    console.log('BookWyrm filler script injected');
+    //console.log('BookWyrm filler script injected');
   } catch (e) {
     console.error('Failed to inject BookWyrm filler:', e);
   }
@@ -57,9 +57,9 @@ async function injectAndExtract(tabId) {
     const response = await browser.tabs.sendMessage(tabId, { action: 'triggerExtraction' });
 
     // Debug: log extracted data
-    if (response && response.extractedData) {
-      console.log('extractedData:', response.extractedData);
-    }
+    // if (response && response.extractedData) {
+    //   console.log('extractedData:', response.extractedData);
+    // }
 
     return response;
   } catch (err) {

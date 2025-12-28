@@ -45,14 +45,10 @@
     // Trim whitespace
     const trimmed = stringDate.trim().replace(/^\W+/, '');
 
-    // Debug: log what we're trying to parse
-    console.log('stringDateToDictionary input:', trimmed);
-
     const date = new Date(trimmed);
 
     // Check if date is valid
     if (isNaN(date.getTime())) {
-      console.log('stringDateToDictionary: Invalid date');
       return { month: null, day: null, year: null };
     }
 
