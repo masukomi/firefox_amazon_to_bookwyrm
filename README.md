@@ -1,5 +1,9 @@
 # Amazon to BookWyrm - Firefox Extension
 
+<div style="max-width: 10em;">
+  <img aria-hidden="true" src="https://raw.githubusercontent.com/masukomi/firefox_amazon_to_bookwyrm/main/firefox/icons/icon.svg">
+</div>
+
 A Firefox browser extension that extracts book data from Amazon.com and Amazon.co.uk, then automatically populates the "Add Book" form on your BookWyrm instance.
 
 ## The Problem
