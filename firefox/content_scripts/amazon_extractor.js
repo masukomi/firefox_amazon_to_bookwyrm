@@ -45,7 +45,25 @@
     // Trim whitespace
     const trimmed = stringDate.trim().replace(/^\W+/, '');
 
-    const date = new Date(trimmed);
+    // Handle Spanish months manually since Date() might not support them
+    const spanishMonths = {
+      'enero': 0, 'febrero': 1, 'marzo': 2, 'abril': 3, 'mayo': 4, 'junio': 5,
+      'julio': 6, 'agosto': 7, 'septiembre': 8, 'octubre': 9, 'noviembre': 10, 'diciembre': 11
+    };
+
+    let date;
+    // Try to detect Spanish date format: "7 de marzo de 2023" or "7 marzo 2023"
+    const spanishMatch = trimmed.toLowerCase().match(/(\d{1,2})\s+(?:de\s+)?([a-z]+)\s+(?:de\s+)?(\d{4})/);
+
+    if (spanishMatch && spanishMonths[spanishMatch[2]] !== undefined) {
+      const day = parseInt(spanishMatch[1]);
+      const month = spanishMonths[spanishMatch[2]];
+      const year = parseInt(spanishMatch[3]);
+      date = new Date(year, month, day);
+    } else {
+      // Fallback to standard parsing
+      date = new Date(trimmed);
+    }
 
     // Check if date is valid
     if (isNaN(date.getTime())) {
@@ -158,10 +176,7 @@
       extractionTimestamp: Date.now()
     });
 
-    // Redirect to BookWyrm create-book page
-    const createBookUrl = settings.bookwyrmUrl + '/create-book';
-    window.location.href = createBookUrl;
-
+    // Return success and let background script handle the navigation
     return { success: true, extractedData: result.data };
   }
 

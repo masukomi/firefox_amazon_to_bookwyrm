@@ -56,6 +56,24 @@ input[type="url"]:focus {
   margin-top: 4px;
 }
 
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.checkbox-group input[type="checkbox"] {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.checkbox-group label {
+  display: inline;
+  margin-bottom: 0;
+  font-weight: normal;
+  cursor: pointer;
+}
+
 .button-group {
   display: flex;
   gap: 8px;
