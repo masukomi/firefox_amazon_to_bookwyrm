@@ -72,6 +72,13 @@ If you notice that certain fields are no longer being extracted correctly, pleas
 **Extension not working**: Try reloading the extension from `about:debugging` and refreshing the Amazon page.
 
 ## For Developers
+If you don't intend to muck with the source code to the extension, or fork it, stop reading now. 😉
+
+The GitHub repo can be found here: <https://github.com/masukomi/firefox_amazon_to_bookwyrm/>
+
+Please fork it, and make changes.
+
+
 ### Installing From Source (Temporary Installation)
 
 1. Clone this repository
@@ -102,6 +109,55 @@ If Amazon changes their page structure, you only need to update the JavaScript e
 - `productDetail(pattern)` - Returns the value for a specific detail matching the regex pattern
 - `stringDateToDictionary(dateString)` - Converts date strings like "March 7, 2023" to `{month, day, year}`
 
+### Modifying it to support other sites {#modifying-it-to-support-other-sites}
+
+This requires a little bit of JavaScript knowledge. Specifically, you'll need to know how to craft a line of JS code that can run in the browser and extract information from the DOM.
+
+
+#### The Magic Sauce {#the-magic-sauce}
+
+The magic sauce of this plugin lives in `field_extractors.json`
+
+It's a dictionary whose keys are field names in BookWyrm's "Create Book" form. Its values are the JavaScript the extension needs to execute to extract the value for that key. Note that not all pages have the relevant data. For example, the `series` field will be `null` for any book that's not part of a series.
+
+I'm extracting _most_ of the information with the help of the `productDetail` helper function which would need to be modified to work on another site (see below). However, you don't need to use that. The value just has to be some JavaScript that can find and extract the data you need from whatever page you have it working on.
+
+For example, to extract the title from an Amazon book page it uses this code:
+
+```javascript
+document.getElementById('productTitle').textContent.trim()
+```
+
+For each field I spent time in the console on various book's details pages crafting little bits of JS code like that to extract the necessary data.
+
+Note that when using CSS selectors the more specific it is the more likely it will be to break. Start with the CSS selector your browser gives, you and then simplify it as much as you can.
+
+When putting your code into `field_extractors.json` remember to escape all your backslashes and double quotes inside the value's outer quotes. I.e. `\` → `\\` &amp; `"` → `\"`
+
+#### Helper Functions {#helper-functions}
+
+There are two helper functions that facilitate this:
+
+```javascript
+stringDateToDictionary(stringDate) // => { month: 12, day: 31, year: 2025 }
+productDetail(itemName) // <string data>
+```
+
+`stringDateToDictionary` exists because BookWyrm requires dates to be submitted via 3 fields so the extension needs the data separated out for each field. You probably won't need to modify this because it just uses JavaScript's built in date parsing. As long as `Date.parse(…)` can correctly handle the date string you're passing in, you can leave it be.
+
+The `productDetail` function is based on the assumption that there's a central list of product details on the page that we can access for multiple items. It takes a string matcher. Usually I just use a regular expression like `productDetail(/Language/i)` I've been making them case insensitive in case Amazon changes the capitalization on any of them.
+
+Scroll down to the "Product Details" section of any book on Amazon to see an example of this.
+
+Alas, the developer who wrote that didn't know about [the tags for a Description List](https://developer.mozilla.org/en-US/docs/Web/HTML/How_to/Define_terms_with_HTML#how_to_build_a_description_list), so it has to do some funky gyrations to split that list up into a set of keys and values. You'll want to modify this function to support the equivalent list on whatever site you're extracting data from.
+
+
+#### Site Limitations {#site-limitations}
+
+Limiting the functionality to amazon.com and amazon.co.uk is handled via the `isExtractableSite(url)` function. It's not limited by the extension's manifest, because we need it to be able to work with _any_ BookWyrm instance, and we can't know the URL of every one, especially since new ones can be added at any time.
+
+Replace the domain names in `isExtractableSite` with the domain name of the site you're adding support for.
+
 ### Contributing
 
 Found a bug or want to improve the extractors?
@@ -117,8 +173,9 @@ Contributions are welcome!
 
 GPL v3.0. See the LICENSE file for details.
 
-## Links
+#### Getting Help {#getting-help}
 
-- **GitHub**: https://github.com/masukomi/firefox_amazon_to_bookwyrm
-- **Author**: [@masukomi@connectified.com](https://connectified.com/@masukomi)
-- **BookWyrm**: https://joinbookwyrm.com/
+Feel free to hit me up with questions on the Fediverse: [@masukomi@connectified.com](https://connectified.com/@masukomi)
+
+Please do so even if you file an Issue or Pull Request on GitHub, because I'm absolutely terrible about seeing email.
+

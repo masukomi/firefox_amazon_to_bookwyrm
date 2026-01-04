@@ -4,37 +4,44 @@
  */
 
 /**
- * Check if a URL is an Amazon book page
+ * Check if a URL is from a site we can handle
  */
-function isAmazonPage(url) {
+function isExtractableSite(url) {
   if (!url) return false;
-  return url.includes('amazon.com') || url.includes('amazon.co.uk');
+  domain = (new URL(url)).hostname.replace(/(\S+?\.)*(\S+?\.\S+)$/, "$2")
+  return ["amazon.com", "amazon.co.uk", "amazon.es"].includes(domain)
+}
+
+async function getBookwyrmUrl(){
+  const storage = await browser.storage.local.get('bookwyrmUrl');
+  if (!storage.bookwyrmUrl) return null;
+  return storage;
 }
 
 /**
  * Check if a URL is a BookWyrm create-book page
  */
-async function isBookWyrmCreatePage(url) {
-  if (!url) return false;
+async function isBookWyrmCreatePage(stringUrl) {
+  if (!stringUrl) return false;
 
-  const storage = await browser.storage.local.get('bookwyrmUrl');
+  const storage = await getBookwyrmUrl();
   if (!storage.bookwyrmUrl) return false;
 
   // Check if the URL starts with the BookWyrm instance URL and contains /create-book
-  return url.startsWith(storage.bookwyrmUrl) && url.includes('/create-book');
+  return stringUrl.startsWith(storage.bookwyrmUrl) && stringUrl.includes('/create-book');
 }
 
 /**
  * Check if a URL is a BookWyrm login page
  */
-async function isBookWyrmLoginPage(url) {
-  if (!url) return false;
+async function isBookWyrmLoginPage(stringUrl) {
+  if (!stringUrl) return false;
 
-  const storage = await browser.storage.local.get('bookwyrmUrl');
+  const storage = await getBookwyrmUrl();
   if (!storage.bookwyrmUrl) return false;
 
   // Check if the URL starts with the BookWyrm instance URL and contains /login
-  return url.startsWith(storage.bookwyrmUrl) && url.includes('/login');
+  return stringUrl.startsWith(storage.bookwyrmUrl) && stringUrl.includes('/login');
 }
 
 /**
@@ -49,6 +56,15 @@ async function injectBookWyrmFiller(tabId) {
     //console.log('BookWyrm filler script injected');
   } catch (e) {
     console.error('Failed to inject BookWyrm filler:', e);
+  }
+}
+
+async function openCreateBookPage(bookwyrmUrl, currentTab, openNewTab) {
+  const createBookUrl = bookwyrmUrl + '/create-book';
+  if (openNewTab){
+    await browser.tabs.create({ url: createBookUrl });
+  } else {
+    await browser.tabs.update(currentTab.id, { url: createBookUrl });
   }
 }
 
@@ -68,6 +84,12 @@ async function injectAndExtract(tabId) {
 
     // Now send the message to trigger extraction
     const response = await browser.tabs.sendMessage(tabId, { action: 'triggerExtraction' });
+    // [message] triggerExtraction -> [function] handleExtraction()
+    //
+    // response is
+    // { success: true, extractedData: result.data };
+    // or
+    // { success: false, error: <error message> };
 
     // Debug: log extracted data
     // if (response && response.extractedData) {
@@ -87,23 +109,39 @@ async function injectAndExtract(tabId) {
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'extractBookData') {
     // Get the active tab and trigger extraction
-    browser.tabs.query({ active: true, currentWindow: true }).then(async tabs => {
+    (async () => {
+      const tabs = await browser.tabs.query({ active: true, currentWindow: true });
       if (tabs.length === 0) {
         sendResponse({ success: false, error: 'No active tab found' });
         return;
       }
 
-      const tab = tabs[0];
+      const currentTab = tabs[0];
 
-      if (!isAmazonPage(tab.url)) {
-        sendResponse({ success: false, error: 'Not on an Amazon page' });
+      if (!isExtractableSite(currentTab.url)) {
+        sendResponse({ success: false, error: (currentTab.url + " is not supported.") });
+        return;
+      }
+
+      const settings = await browser.storage.local.get(['bookwyrmUrl', 'openNewTab']);
+      if (! settings.bookwyrmUrl){
+        sendResponse({ success: false, error: "Please enter your BookWyrm instance's URL" });
         return;
       }
 
       // Inject the script and trigger extraction
-      const response = await injectAndExtract(tab.id);
+      const response = await injectAndExtract(currentTab.id);
+
+      if (response && response.success) {
+        await openCreateBookPage(settings.bookwyrmUrl, currentTab, settings.openNewTab)
+      } else if (! response) {
+        // theoretically can't happen
+        sendResponse({ success: false, error: 'Unexpected error. Missing internal response.' });
+        return;
+      }
+      // else error message already in response
       sendResponse(response);
-    });
+    })();
 
     return true; // Indicates async response
   }
