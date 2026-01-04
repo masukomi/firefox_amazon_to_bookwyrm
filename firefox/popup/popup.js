@@ -4,6 +4,7 @@
  */
 
 const bookwyrmUrlInput = document.getElementById('bookwyrm-url');
+const openNewTabCheckbox = document.getElementById('open-new-tab');
 const extractBtn = document.getElementById('extract-btn');
 const statusDiv = document.getElementById('status');
 
@@ -53,9 +54,12 @@ function normalizeUrl(url) {
  */
 async function loadSettings() {
   try {
-    const result = await browser.storage.local.get('bookwyrmUrl');
+    const result = await browser.storage.local.get(['bookwyrmUrl', 'openNewTab']);
     if (result.bookwyrmUrl) {
       bookwyrmUrlInput.value = result.bookwyrmUrl;
+    }
+    if (result.openNewTab !== undefined) {
+      openNewTabCheckbox.checked = result.openNewTab;
     }
   } catch (e) {
     console.error('Failed to load settings:', e);
@@ -68,6 +72,7 @@ async function loadSettings() {
  */
 async function saveSettings() {
   const url = normalizeUrl(bookwyrmUrlInput.value);
+  const openNewTab = openNewTabCheckbox.checked;
 
   if (!url) {
     showStatus('Please enter a valid BookWyrm URL', 'error');
@@ -75,7 +80,10 @@ async function saveSettings() {
   }
 
   try {
-    await browser.storage.local.set({ bookwyrmUrl: url });
+    await browser.storage.local.set({
+      bookwyrmUrl: url,
+      openNewTab: openNewTab
+    });
     bookwyrmUrlInput.value = url;
     return true;
   } catch (e) {
@@ -95,7 +103,7 @@ async function isAmazonPage() {
       return false;
     }
     const url = tabs[0].url;
-    return url && (url.includes('amazon.com') || url.includes('amazon.co.uk'));
+    return url && (url.includes('amazon.com') || url.includes('amazon.co.uk') || url.includes('amazon.es'));
   } catch (e) {
     console.error('Failed to check current tab:', e);
     return false;

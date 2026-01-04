@@ -8,7 +8,7 @@
  */
 function isAmazonPage(url) {
   if (!url) return false;
-  return url.includes('amazon.com') || url.includes('amazon.co.uk');
+  return url.includes('amazon.com') || url.includes('amazon.co.uk') || url.includes('amazon.es');
 }
 
 /**
@@ -102,6 +102,22 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
       // Inject the script and trigger extraction
       const response = await injectAndExtract(tab.id);
+
+      if (response && response.success) {
+        // Get settings to decide how to open BookWyrm
+        const settings = await browser.storage.local.get(['bookwyrmUrl', 'openNewTab']);
+
+        if (settings.bookwyrmUrl) {
+          const createBookUrl = settings.bookwyrmUrl + '/create-book';
+
+          if (settings.openNewTab) {
+            await browser.tabs.create({ url: createBookUrl });
+          } else {
+            await browser.tabs.update(tab.id, { url: createBookUrl });
+          }
+        }
+      }
+
       sendResponse(response);
     });
 

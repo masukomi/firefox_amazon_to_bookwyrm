@@ -22,6 +22,7 @@
     "tabs",
     "*://*.amazon.com/*",
     "*://*.amazon.co.uk/*",
+    "*://*.amazon.es/*",
     "<all_urls>"
   ],
   "browser_action": {
@@ -35,7 +36,7 @@
   },
   "content_scripts": [
     {
-      "matches": ["*://*.amazon.com/*", "*://*.amazon.co.uk/*"],
+      "matches": ["*://*.amazon.com/*", "*://*.amazon.co.uk/*", "*://*.amazon.es/*"],
       "js": ["content_scripts/amazon_extractor.js"],
       "run_at": "document_idle"
     }
