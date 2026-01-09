@@ -1,8 +1,9 @@
 {
   "manifest_version": 2,
-  "name": "Amazon to BookWyrm",
+  "name": "__MSG_extensionName__",
   "version": "1.0.0",
-  "description": "Extract book data from Amazon and populate BookWyrm's create-book form",
+  "description": "__MSG_extensionDescription__",
+  "default_locale": "en",
   "browser_specific_settings": {
     "gecko": {
       "id": "amazon-to-bookwyrm@masukomi.org",
@@ -27,7 +28,7 @@
   ],
   "browser_action": {
     "default_icon": "icons/icon.svg",
-    "default_title": "Amazon to BookWyrm",
+    "default_title": "__MSG_extensionName__",
     "default_popup": "popup/popup.html"
   },
   "background": {

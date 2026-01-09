@@ -9,6 +9,18 @@ const extractBtn = document.getElementById('extract-btn');
 const statusDiv = document.getElementById('status');
 
 /**
+ * Initialize i18n for HTML elements with data-i18n attributes
+ */
+function initializeI18n() {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    el.textContent = browser.i18n.getMessage(el.dataset.i18n);
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+    el.placeholder = browser.i18n.getMessage(el.dataset.i18nPlaceholder);
+  });
+}
+
+/**
  * Display a status message to the user
  */
 function showStatus(message, type) {
@@ -75,7 +87,7 @@ async function saveSettings() {
   const openNewTab = openNewTabCheckbox.checked;
 
   if (!url) {
-    showStatus('Please enter a valid BookWyrm URL', 'error');
+    showStatus(browser.i18n.getMessage('errorInvalidUrl'), 'error');
     return false;
   }
 
@@ -88,7 +100,7 @@ async function saveSettings() {
     return true;
   } catch (e) {
     console.error('Failed to save settings:', e);
-    showStatus('Failed to save settings', 'error');
+    showStatus(browser.i18n.getMessage('errorSaveFailed'), 'error');
     return false;
   }
 }
@@ -125,7 +137,7 @@ async function extractBookData() {
   // Check if we're on an Amazon page
   const onExtractableSite = await isExtractableSite();
   if (!onExtractableSite) {
-    showStatus('Please navigate to an Amazon book page first', 'warning');
+    showStatus(browser.i18n.getMessage('warningNotAmazon'), 'warning');
     return;
   }
 
@@ -133,7 +145,7 @@ async function extractBookData() {
   try {
     const response = await browser.runtime.sendMessage({ action: 'extractBookData' });
     if (response && response.success) {
-      showStatus('Extracting book data...', 'success');
+      showStatus(browser.i18n.getMessage('statusExtracting'), 'success');
       // Close popup after a short delay
       setTimeout(() => window.close(), 500);
     } else if (response && response.error) {
@@ -141,12 +153,15 @@ async function extractBookData() {
     }
   } catch (e) {
     console.error('Failed to trigger extraction:', e);
-    showStatus('Failed to start extraction', 'error');
+    showStatus(browser.i18n.getMessage('errorExtractionFailed'), 'error');
   }
 }
 
 // Event listeners
 extractBtn.addEventListener('click', extractBookData);
 
-// Load settings on popup open
-document.addEventListener('DOMContentLoaded', loadSettings);
+// Initialize i18n and load settings on popup open
+document.addEventListener('DOMContentLoaded', () => {
+  initializeI18n();
+  loadSettings();
+});

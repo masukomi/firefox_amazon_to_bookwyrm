@@ -99,7 +99,7 @@ async function injectAndExtract(tabId) {
     return response;
   } catch (err) {
     console.error('Failed to inject or communicate with content script:', err);
-    return { success: false, error: 'Failed to extract data. Please try again.' };
+    return { success: false, error: browser.i18n.getMessage('errorExtractorFailed') };
   }
 }
 
@@ -112,20 +112,20 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     (async () => {
       const tabs = await browser.tabs.query({ active: true, currentWindow: true });
       if (tabs.length === 0) {
-        sendResponse({ success: false, error: 'No active tab found' });
+        sendResponse({ success: false, error: browser.i18n.getMessage('errorNoActiveTab') });
         return;
       }
 
       const currentTab = tabs[0];
 
       if (!isExtractableSite(currentTab.url)) {
-        sendResponse({ success: false, error: (currentTab.url + " is not supported.") });
+        sendResponse({ success: false, error: browser.i18n.getMessage('errorSiteNotSupported', [currentTab.url]) });
         return;
       }
 
       const settings = await browser.storage.local.get(['bookwyrmUrl', 'openNewTab']);
       if (! settings.bookwyrmUrl){
-        sendResponse({ success: false, error: "Please enter your BookWyrm instance's URL" });
+        sendResponse({ success: false, error: browser.i18n.getMessage('errorNoBookwyrmUrl') });
         return;
       }
 
@@ -136,7 +136,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
         await openCreateBookPage(settings.bookwyrmUrl, currentTab, settings.openNewTab)
       } else if (! response) {
         // theoretically can't happen
-        sendResponse({ success: false, error: 'Unexpected error. Missing internal response.' });
+        sendResponse({ success: false, error: browser.i18n.getMessage('errorUnexpected') });
         return;
       }
       // else error message already in response
