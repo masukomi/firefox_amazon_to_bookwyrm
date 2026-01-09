@@ -78,12 +78,6 @@ The GitHub repo can be found here: <https://github.com/masukomi/firefox_amazon_t
 
 Please fork it, and make changes.
 
-
-
-
-
-
-
 ### Installing From Source (Temporary Installation)
 
 1. Clone this repository
@@ -174,6 +168,10 @@ Found a bug or want to improve the extractors?
 
 Contributions are welcome!
 
+**Current Contributors**
+- [masukomi](https://masukomi.org)
+- [Ignacio de Miguel Diaz](https://lacentralita.net/@imigueldiaz)
+
 ## License
 
 GPL v3.0. See the LICENSE file for details.
@@ -183,4 +181,3 @@ GPL v3.0. See the LICENSE file for details.
 Feel free to hit me up with questions on the Fediverse: [@masukomi@connectified.com](https://connectified.com/@masukomi)
 
 Please do so even if you file an Issue or Pull Request on GitHub, because I'm absolutely terrible about seeing email.
-
