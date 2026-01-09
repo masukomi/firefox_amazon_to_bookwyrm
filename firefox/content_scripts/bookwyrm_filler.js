@@ -213,10 +213,7 @@
   async function handleLoginRedirect() {
     const storage = await browser.storage.local.get(['extractedBookData']);
     if (storage.extractedBookData) {
-      alert(
-        'You need to be logged in to your BookWyrm instance to add a book.\n\n' +
-          'Please log in, & make sure this book doesn\'t already exist befor trying again.'
-      );
+      alert(browser.i18n.getMessage('alertLoginRequired'));
       // Clear the stored data since they'll need to extract again
       await browser.storage.local.remove(['extractedBookData', 'extractionTimestamp']);
     }

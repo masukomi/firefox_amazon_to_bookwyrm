@@ -139,7 +139,7 @@
   async function extractBookData() {
     const extractors = await loadExtractors();
     if (!extractors) {
-      return { success: false, error: 'Failed to load field extractors' };
+      return { success: false, error: browser.i18n.getMessage('errorLoadExtractors') };
     }
 
     const extractedData = {};
@@ -179,12 +179,9 @@
     // Warn about missing critical fields
     if (result.missingCritical.length > 0) {
       const missing = result.missingCritical.join(', ');
-      const proceed = confirm(
-        `Warning: The following critical fields could not be extracted: ${missing}\n\n` +
-        'Do you want to continue anyway?'
-      );
+      const proceed = confirm(browser.i18n.getMessage('warningMissingFields', [missing]));
       if (!proceed) {
-        return { success: false, error: 'Extraction cancelled by user' };
+        return { success: false, error: browser.i18n.getMessage('errorExtractionCancelled') };
       }
     }
 

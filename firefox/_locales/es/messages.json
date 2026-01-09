@@ -1,0 +1,102 @@
+{
+  "extensionName": {
+    "message": "Amazon a BookWyrm",
+    "description": "Extension name shown in browser"
+  },
+  "extensionDescription": {
+    "message": "Extrae datos de libros de Amazon y rellena el formulario de BookWyrm",
+    "description": "Extension description shown in browser"
+  },
+  "settingsHeading": {
+    "message": "Ajustes de BookWyrm",
+    "description": "Popup heading"
+  },
+  "bookwyrmUrlLabel": {
+    "message": "URL de tu instancia de BookWyrm",
+    "description": "Label for URL input"
+  },
+  "bookwyrmUrlPlaceholder": {
+    "message": "https://bookwyrm.social",
+    "description": "Placeholder for URL input"
+  },
+  "bookwyrmUrlHelp": {
+    "message": "p. ej., https://bookwyrm.social",
+    "description": "Help text below URL input"
+  },
+  "openNewTabLabel": {
+    "message": "Abrir en nueva pestaña",
+    "description": "Checkbox label"
+  },
+  "extractButtonText": {
+    "message": "Extraer datos del libro",
+    "description": "Main action button"
+  },
+  "errorInvalidUrl": {
+    "message": "Por favor, introduce una URL de BookWyrm válida",
+    "description": "Shown when URL validation fails"
+  },
+  "errorSaveFailed": {
+    "message": "Error al guardar los ajustes",
+    "description": "Shown when storage fails"
+  },
+  "warningNotAmazon": {
+    "message": "Por favor, navega primero a una página de libro en Amazon",
+    "description": "Shown when not on Amazon"
+  },
+  "statusExtracting": {
+    "message": "Extrayendo datos del libro...",
+    "description": "Shown during extraction"
+  },
+  "errorExtractionFailed": {
+    "message": "Error al iniciar la extracción",
+    "description": "Shown when extraction fails"
+  },
+  "errorNoActiveTab": {
+    "message": "No se encontró ninguna pestaña activa",
+    "description": "Background script error"
+  },
+  "errorSiteNotSupported": {
+    "message": "$URL$ no es compatible.",
+    "description": "Shown for unsupported sites",
+    "placeholders": {
+      "url": {
+        "content": "$1",
+        "example": "https://example.com"
+      }
+    }
+  },
+  "errorNoBookwyrmUrl": {
+    "message": "Por favor, introduce la URL de tu instancia de BookWyrm",
+    "description": "Shown when BookWyrm URL not configured"
+  },
+  "errorUnexpected": {
+    "message": "Error inesperado. Falta respuesta interna.",
+    "description": "Internal error fallback"
+  },
+  "errorExtractorFailed": {
+    "message": "Error al extraer datos. Por favor, inténtalo de nuevo.",
+    "description": "Shown when content script fails"
+  },
+  "warningMissingFields": {
+    "message": "Advertencia: No se pudieron extraer los siguientes campos críticos: $FIELDS$\n\n¿Deseas continuar de todos modos?",
+    "description": "Confirmation when critical fields missing",
+    "placeholders": {
+      "fields": {
+        "content": "$1",
+        "example": "title, author"
+      }
+    }
+  },
+  "errorExtractionCancelled": {
+    "message": "Extracción cancelada por el usuario",
+    "description": "When user cancels due to missing fields"
+  },
+  "errorLoadExtractors": {
+    "message": "Error al cargar los extractores de campos",
+    "description": "When JSON config fails to load"
+  },
+  "alertLoginRequired": {
+    "message": "Debes iniciar sesión en tu instancia de BookWyrm para añadir un libro.\n\nPor favor, inicia sesión y asegúrate de que este libro no exista antes de intentarlo de nuevo.",
+    "description": "Shown on BookWyrm login page redirect"
+  }
+}
