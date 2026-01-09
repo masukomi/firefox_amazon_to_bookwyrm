@@ -1,4 +1,4 @@
-/**
+/*
  * Amazon Extractor Content Script
  * Extracts book data from Amazon product pages and sends it to BookWyrm
  */
@@ -9,7 +9,7 @@
   // Critical fields that must be present
   const CRITICAL_FIELDS = ['title', 'add_author'];
 
-  /**
+  /*
    * Get all product details as an array of [key, value] pairs
    * @returns {Array} Array of [key, value] pairs from the product detail bullets
    */
@@ -21,7 +21,7 @@
 
   }
 
-  /**
+  /*
    * Get a specific product detail by name
    * @param {string|RegExp} itemName - The name (or regex pattern) of the detail to find
    * @returns {string|undefined} The value of the matching detail, or undefined if not found
@@ -32,8 +32,41 @@
     return found ? found[1] : undefined;
   }
 
-  /**
-   * Convert a date string like "March 7, 2023" to a dictionary with month, day, year
+  /* ⚠️ Date parsing is a hack. This is an ugly, terrible, no-good
+     brittle hack because - despite JavaScript being around since ~1996 -
+     no-one seems to feel that `new Date("<date string>")` needs
+     to support any language other than English.
+
+     We may want to use
+     https://github.com/wanasit/chrono
+     in the future, but it doesn't support a ton of languages
+     and it's Spanish support is incomplete.
+     So, I'm going with the crappy hack for now.
+  */
+  // Month name mappings for supported languages
+  // 🤦‍♀️ so stupid
+  const monthMappings = {
+    // Spanish
+    'enero': 'January',
+    'febrero': 'February',
+    'marzo': 'March',
+    'abril': 'April',
+    'mayo': 'May',
+    'junio': 'June',
+    'julio': 'July',
+    'agosto': 'August',
+    'septiembre': 'September',
+    'setiembre': 'September',
+    'octubre': 'October',
+    'noviembre': 'November',
+    'diciembre': 'December'
+  };
+
+  /*
+   * Convert a date strings like
+   * - "March 7, 2023" (English)
+   * - "2 enero 2026"  (Spanish)
+   * to a dictionary with month, day, year
    * @param {string} stringDate - The date string to parse
    * @returns {Object} Dictionary with keys: month (number), day (number), year (number)
    */
@@ -42,10 +75,19 @@
       return { month: null, day: null, year: null };
     }
 
-    // Trim whitespace
-    const trimmed = stringDate.trim().replace(/^\W+/, '');
+    // Trim whitespace and leading non-word characters
+    let normalized = stringDate.trim().replace(/^\W+/, '');
 
-    const date = new Date(trimmed);
+    // Replace localized month names with English equivalents (case-insensitive)
+    // 7 de marzo de 2023 → 7 March 2023
+    // 2 marzo 2023 → 2 March 2023
+    for (const [localized, english] of Object.entries(monthMappings)) {
+      const regex = new RegExp(`\\b${localized}\\b`, 'gi');
+      // while not standard English Date(…) does seem to handle it without problem
+      normalized = normalized.replace(regex, english).replace(/\sde\s/i, '');
+    }
+
+    const date = new Date(normalized);
 
     // Check if date is valid
     if (isNaN(date.getTime())) {
@@ -55,7 +97,7 @@
     return { month: date.getMonth() + 1, day: date.getDate(), year: date.getFullYear() };
   }
 
-  /**
+  /*
    * Load field extractors from JSON file
    */
   async function loadExtractors() {
@@ -69,7 +111,7 @@
     }
   }
 
-  /**
+  /*
    * Execute an extractor code string and return the result
    * @param {string} code - JavaScript code to execute
    * @returns {*} The result of executing the code, or null if error/empty
@@ -91,7 +133,7 @@
     }
   }
 
-  /**
+  /*
    * Extract all book data using the field extractors
    */
   async function extractBookData() {
@@ -123,7 +165,7 @@
     };
   }
 
-  /**
+  /*
    * Main function to handle extraction request
    */
   async function handleExtraction() {
@@ -146,22 +188,13 @@
       }
     }
 
-    // Get BookWyrm URL from storage
-    const settings = await browser.storage.local.get('bookwyrmUrl');
-    if (!settings.bookwyrmUrl) {
-      return { success: false, error: 'BookWyrm URL not configured' };
-    }
-
     // Store extracted data for the BookWyrm filler script
     await browser.storage.local.set({
       extractedBookData: result.data,
       extractionTimestamp: Date.now()
     });
 
-    // Redirect to BookWyrm create-book page
-    const createBookUrl = settings.bookwyrmUrl + '/create-book';
-    window.location.href = createBookUrl;
-
+    // Return success and let background script handle the navigation
     return { success: true, extractedData: result.data };
   }
 

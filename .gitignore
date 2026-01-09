@@ -2,3 +2,4 @@
 eslint.config.js
 instructions*
 *.zip
+.DS_Store
