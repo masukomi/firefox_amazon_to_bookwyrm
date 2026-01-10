@@ -24,7 +24,7 @@ This extension lets you:
 
 ## Installation
 
-Go to [addons.mozilla.org](https://addons.mozilla.org/amazon-to-bookwyrm) and click install. 
+Go to [addons.mozilla.org](https://addons.mozilla.org/en-US/firefox/addon/amazon-to-bookwyrm) and click install. 
 
 You'll want to pin the extension to your toolbar so that its button is available for clicking.
 
@@ -42,7 +42,7 @@ This extension requires access to "all websites" (`<all_urls>`), which may seem 
 **BookWyrm is federated** - there are hundreds of independent BookWyrm instances running on different domains. We have no way of knowing where your instance is hosted. It could be `bookwyrm.social`, `books.example.com`, or any other domain. To fill in the book form on *your* instance, we need permission to interact with whatever domain that might be.
 
 The extension only activates on:
-- Amazon.com and Amazon.co.uk (to extract book data)
+- Amazon.com, Amazon.co.uk, Amazon.es (to extract book data)
 - Your configured BookWyrm instance URL (to fill the form)
 
 You can review the source code to verify this behavior.
@@ -67,9 +67,50 @@ If you notice that certain fields are no longer being extracted correctly, pleas
 
 **"You need to be logged in" message**: Make sure you're logged into your BookWyrm instance before extracting book data.
 
-**Missing or incorrect data**: Amazon's page structure varies. Some fields may not be available for all books. You can manually fill in any missing information on the BookWyrm form.
+**Missing or incorrect data**: 
 
-**Extension not working**: Try reloading the extension from `about:debugging` and refreshing the Amazon page.
+- Missing data: 
+  Amazon's page structure varies. Some fields may not be available for all books. You can manually fill in any missing information on the BookWyrm form.
+- Incorrect data: 
+  [Please file an issue](https://github.com/masukomi/firefox_amazon_to_bookwyrm/issues) and include 
+  - a link to the Amazon page it failed to correctly read data from
+  - info on what it got wrong
+  - the Bookwyrm instance you're trying to bring that data into
+  
+  If you're a geek who's familiar with JavaScript I'd love a pull request that fixes it. Check out the instructions below. Especially the part about the "magic sauce". You'll find it's pretty easy.
+
+### Contributing
+Contributions are welcome!
+
+**Current Contributors**
+- [masukomi](https://masukomi.org)
+- [Ignacio de Miguel Diaz](https://lacentralita.net/@imigueldiaz)
+- 1 anonymous translator. 
+
+Thank you for your help. 🙇‍♀️
+
+#### Adding Translations
+We currently have English (`en`), and Spanish (`es`) translations. Human generated translations will happily be accepted, but I'm not interested in machine generated translations that haven't been checked by native speakers.
+
+In the `firefox/_locales` directory you'll find folders with the existing translations. Each language has its own folder whose name corresponds to its two letter [ISO 639 language code](https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes). In that folder you'll find a `messages.json` file. Make a copy of the `firefox/_locales/en/messages.json` and translate it to a language you know well. 
+
+If you could translate the [Firefox Add-ons page](https://addons.mozilla.org/en-US/firefox/addon/amazon-to-bookwyrm) too that would be a huge help to others.
+
+If a geek familiar with GitHub (or any of its clones) follow the instructions below for creating a PR. If you're not a geek, message me on the Fediverse at [@masukomi@connectified.com](https://connectified.com/@masukomi) and we'll figure out how to get your translation added.
+
+#### Adding Features and Fixing Bugs
+Found a bug or want to improve the extractors?
+
+1. Fork the repository
+2. Make your changes
+3. Test with various Amazon book pages
+4. Submit a Pull Request on [GitHub](https://github.com/masukomi/firefox_amazon_to_bookwyrm)
+
+General guidelines:
+
+- Please limit each PR to 1 bug fix, or 1 feature. 
+- Before writing code for a new feature, please message me on the Fediverse at [@masukomi@connectified.com](https://connectified.com/@masukomi) and check if it's something I'm interested in adding.
+- _Do Not_ use an AI to generate new code without carefully reviewing it and making sure that it not only works, but doesn't move functionality around without good reason or do anything silly. Cleaning up poor quality AI generated code and random changes is _not_ how I want to spend my free time.
 
 ## For Developers
 If you don't intend to muck with the source code to the extension, or fork it, stop reading now. 😉
@@ -156,21 +197,6 @@ Alas, the developer who wrote that didn't know about [the tags for a Description
 Limiting the functionality to amazon.com and amazon.co.uk is handled via the `isExtractableSite(url)` function. It's not limited by the extension's manifest, because we need it to be able to work with _any_ BookWyrm instance, and we can't know the URL of every one, especially since new ones can be added at any time.
 
 Replace the domain names in `isExtractableSite` with the domain name of the site you're adding support for.
-
-### Contributing
-
-Found a bug or want to improve the extractors?
-
-1. Fork the repository
-2. Make your changes
-3. Test with various Amazon book pages
-4. Submit a Pull Request on [GitHub](https://github.com/masukomi/firefox_amazon_to_bookwyrm)
-
-Contributions are welcome!
-
-**Current Contributors**
-- [masukomi](https://masukomi.org)
-- [Ignacio de Miguel Diaz](https://lacentralita.net/@imigueldiaz)
 
 ## License
 
