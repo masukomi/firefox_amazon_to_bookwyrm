@@ -24,7 +24,7 @@ This extension lets you:
 
 ## Installation
 
-Go to [addons.mozilla.org](https://addons.mozilla.org/en-US/firefox/addon/amazon-to-bookwyrm) and click install. 
+Go to [addons.mozilla.org](https://addons.mozilla.org/en-US/firefox/addon/amazon-to-bookwyrm) and click install. [Go here for the Spanish version](https://addons.mozilla.org/es-ES/firefox/addon/amazon-to-bookwyrm/)
 
 You'll want to pin the extension to your toolbar so that its button is available for clicking.
 
