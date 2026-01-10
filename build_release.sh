@@ -6,11 +6,26 @@
 
 set -e
 
+VERSION="$1"
+if [ "$VERSION" == "" ]; then
+    echo "Please supply a version number"
+    exit 64
+fi
+MANIFEST_VERSION=$(grep --color=none '"version": ' firefox/manifest.json | sed -e 's/[[:space:]]*"version": "//' -e 's/",.*//')
+NO_V_VERSION=${VERSION#v}
+
+if [ "$NO_V_VERSION" != "$MANIFEST_VERSION" ]; then
+    echo "Supplied version: $NO_V_VERSION ($VERSION) & manifest version $MANIFEST_VERSION don't match!"
+    exit 65 #EX_DATAERR
+fi
+
+FILE_VERSION=$( echo "$VERSION" | sed -e "s/\./_/g" )
+
 # Get the directory where this script is located
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Define the output filename (placed in parent directory)
-OUTPUT_FILE="$SCRIPT_DIR/amazon_to_bookwyrm.zip"
+OUTPUT_FILE="$SCRIPT_DIR/amazon_to_bookwyrm_$FILE_VERSION.zip"
 
 # Remove existing zip if present
 if [ -f "$OUTPUT_FILE" ]; then
