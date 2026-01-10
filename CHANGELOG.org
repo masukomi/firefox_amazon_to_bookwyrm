@@ -1,0 +1,10 @@
+#+title: Changelog
+
+* v1.1.0
+[added]
+- now supports [[https://amazon.es][amazon.es]]
+- added i18n support and a Spanish translation
+- can optionally open Bookwyrm in a new tab
+
+* v1.0.0
+Initial release.
